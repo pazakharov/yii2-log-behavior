@@ -177,7 +177,6 @@ class Log extends Behavior
         $diff = array_diff_assoc($new, $old);
         $this->_changed_attributes = $diff;
         if (count($diff) > 0) {
-            $this->owner->{$this->timeField} = static::returnTimeStamp();
             $this->_to_save_log = true;
         } else {
             $this->_to_save_log = false;
@@ -220,12 +219,12 @@ class Log extends Behavior
         $attributes[$this->changedAttributesField] = '{'.implode(',', array_keys($this->_changed_attributes)).'}';
 
         if ($this->changedByField) {
-            
+
             if( !isset(Yii::$app->user) || empty(Yii::$app->user) ) throw new \Exception('Log behavior requires a user identity in application.');
             if( empty(Yii::$app->user->id) ) throw new \Exception('Log behavior requires an authorized user.');
-            
+
             $attributes[$this->changedByField] = Yii::$app->user->id;
-            
+
         }
 
         $logClass = $this->logClass;
@@ -236,7 +235,7 @@ class Log extends Behavior
             throw new ErrorException(print_r($log->errors, true));
         }
     }
-    
+
     /**
      * получить текущую отметку времени в текстовом формате
      */
@@ -244,7 +243,7 @@ class Log extends Behavior
     {
         $t = microtime(true);
         $micro = sprintf("%06d",($t - floor($t)) * 1000000);
-        
+
         $date = new \DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
         return $date->format('Y-m-d H:i:s.uP');
     }

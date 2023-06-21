@@ -158,7 +158,9 @@ class Log extends Behavior
      */
     public function logInit($event)
     {
-        $this->setNewVersion();
+        if($this->versionField){
+            $this->setNewVersion();
+        }
     }
 
     /**

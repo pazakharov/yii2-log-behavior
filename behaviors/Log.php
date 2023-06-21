@@ -96,10 +96,10 @@ class Log extends Behavior
     public function attach($owner)
     {
         if (is_null($this->logClass)) {
-            $this->logClass = $owner->className().'Log';
+            $this->logClass = $owner->className() . 'Log';
         }
         if (!class_exists($this->logClass)) {
-            throw new ErrorException('Model for logging "'.$this->logClass.'" ');
+            throw new ErrorException('Model for logging "' . $this->logClass . '" ');
         }
 
         if (isset($this->versionField) && !$owner->isNewRecord) {
@@ -130,7 +130,7 @@ class Log extends Behavior
         }
 
         if (count($attr) > 0) {
-            $array = '{'.implode(',', $attr).'}';
+            $array = '{' . implode(',', $attr) . '}';
         } else {
             $array = null;
         }
@@ -145,6 +145,9 @@ class Log extends Behavior
      */
     public function setNewVersion()
     {
+        if (!$this->versionField) {
+            return;
+        }
         $difference = '9223372036854775806';
         $rand_percent = bcdiv(mt_rand(), mt_getrandmax(), 12);
         $version = bcmul($difference, $rand_percent, 0);
@@ -158,9 +161,7 @@ class Log extends Behavior
      */
     public function logInit($event)
     {
-        if($this->versionField){
-            $this->setNewVersion();
-        }
+        $this->setNewVersion();
     }
 
     /**
@@ -218,15 +219,14 @@ class Log extends Behavior
         $attributes = $this->owner->getAttributes($this->logAttributes);
         $attributes['doc_id'] = $attributes['id'];
         unset($attributes['id']);
-        $attributes[$this->changedAttributesField] = '{'.implode(',', array_keys($this->_changed_attributes)).'}';
+        $attributes[$this->changedAttributesField] = '{' . implode(',', array_keys($this->_changed_attributes)) . '}';
 
         if ($this->changedByField) {
 
-            if( !isset(Yii::$app->user) || empty(Yii::$app->user) ) throw new \Exception('Log behavior requires a user identity in application.');
-            if( empty(Yii::$app->user->id) ) throw new \Exception('Log behavior requires an authorized user.');
+            if (!isset(Yii::$app->user) || empty(Yii::$app->user)) throw new \Exception('Log behavior requires a user identity in application.');
+            if (empty(Yii::$app->user->id)) throw new \Exception('Log behavior requires an authorized user.');
 
             $attributes[$this->changedByField] = Yii::$app->user->id;
-
         }
 
         $logClass = $this->logClass;
@@ -244,10 +244,9 @@ class Log extends Behavior
     public static function returnTimeStamp()
     {
         $t = microtime(true);
-        $micro = sprintf("%06d",($t - floor($t)) * 1000000);
+        $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
 
-        $date = new \DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
+        $date = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
         return $date->format('Y-m-d H:i:s.uP');
     }
-
 }

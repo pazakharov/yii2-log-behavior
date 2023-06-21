@@ -222,11 +222,7 @@ class Log extends Behavior
         $attributes[$this->changedAttributesField] = '{' . implode(',', array_keys($this->_changed_attributes)) . '}';
 
         if ($this->changedByField) {
-
-            if (!isset(Yii::$app->user) || empty(Yii::$app->user)) throw new \Exception('Log behavior requires a user identity in application.');
-            if (empty(Yii::$app->user->id)) throw new \Exception('Log behavior requires an authorized user.');
-
-            $attributes[$this->changedByField] = Yii::$app->user->id;
+            $attributes[$this->changedByField] = Yii::$app->user->email ?? 'backend';
         }
 
         $logClass = $this->logClass;

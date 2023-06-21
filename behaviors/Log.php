@@ -98,7 +98,7 @@ class Log extends Behavior
         if (is_null($this->logClass)) {
             $this->logClass = $owner->className().'Log';
         }
-        if (!class_exists($this->logClass, false)) {
+        if (!class_exists($this->logClass)) {
             throw new ErrorException('Model for logging "'.$this->logClass.'" ');
         }
 
